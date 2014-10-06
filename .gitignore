@@ -52,3 +52,14 @@ docs/_build/
 
 # PyBuilder
 target/
+
+#####
+# OS X temporary files that should never be committed
+ 
+.DS_Store
+*.swp
+*.lock
+profile
+
+Data/
+Python/
