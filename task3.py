@@ -39,7 +39,6 @@ def haar(X):
 # print (haar([9,7,3,5,0,8,2,9]))
 
 
-print ('inverse haar')
 #inverse haar
 def inverse_haar(X):
     #convert items into float first otherwise calculations will be rounded
@@ -112,14 +111,14 @@ original_x = [float(line.split(',')[6]) for line in f]
 #2 A1). Trim the signal to 2^n length and transform to haar wavelet
 x = trimSignal(original_x)
 graph_accel(x)
-pylab.savefig(filedir + 'accel_trimmedsignal.png')
+pylab.savefig('accel_trimmedsignal.png')
 
 x = haar(x)
 
 #2 A2). Graph the result using graph_accel().
 # Graph it, and save figure as a .png
 graph_accel(x)
-pylab.savefig(filedir + 'accel_haar.png')
+pylab.savefig('accel_haar.png')
 
 #B. Haar transforms and “edges”
 #One particular reason for using the Haar transform over other wavelet transforms is that the basic
@@ -168,20 +167,20 @@ transformed_x = haar(trimmed_x)
 inverse_transformed_x = inverse_haar(transformed_x)
 # The sum of differences between original signal and inverse signal should be very close to 0, and therefore numerically equivalent 
 # These differences arise from using float types for calculation, which is faster but sacrifices accuracy. For non-scientific calculation use, this error is acceptable.
-print ('Sum of differences between original signal and inverse signal: ', np.sum(np.absolute(np.subtract(trimmed_x,inverse_transformed_x))))
+print ('Sum of absolutedifferences between original signal and inverse signal: ', np.sum(np.absolute(np.subtract(trimmed_x,inverse_transformed_x))))
 
 #2. Start with the Haar-transformed signal X, and truncate X to the first 2^(n-1) entries. Take the
 #inverse Haar-transform of this truncated X, and graph the result.
 truncated_x = transformed_x[0:int(len(transformed_x)/2)]
 graph_accel(inverse_haar(truncated_x))
-pylab.savefig(filedir + 'accel_haar_firsthalf_k_1.png')
+pylab.savefig('accel_haar_firsthalf_k_1.png')
 
 #3. Do the same thing with the first 2^(n-k) entries, for k = 2, 3 and 4, graphing each result. Briefly
 #describe (1 to 2 sentences) what happens as k increases.
 for k in [2,3,4]:
     truncated_x = transformed_x[0:int(len(transformed_x)/(2**k))]
     graph_accel(inverse_haar(truncated_x))
-    pylab.savefig(filedir + 'accel_haar_firsthalf_k_{}.png'.format(k))
+    pylab.savefig('accel_haar_firsthalf_k_{}.png'.format(k))
 
 #Looking at the different charts it appears as k increases, the chart loses details. With fewer and fewer data points trying to represent the entire chart, only the most exaggerated features such as large drops and rises are apparent.
 
@@ -264,34 +263,48 @@ def plot_peaks(peak_list,start,end):
 
 startEndArray = [(72324, 138915), (101871, 156555), (105840, 167580), (19404, 102753)]
 
-if __name__ == '__main__':
-	for i in range(1,5):
-		rate, data = scipy.io.wavfile.read('Data/clips/' + str(i) + '.wav')
-	# Strip out the stereo channel if present
-		if (len(data.shape) > 1):
-			data = data[:,0]
 
-	# Get just the first 10 seconds as our audio signal
-		x = data[0:10*rate]
+# if __name__ == '__main__':
+# 	for i in range(1,5):
+# 		rate, data = scipy.io.wavfile.read('Data/clips/' + str(i) + '.wav')
+# 	# Strip out the stereo channel if present
+# 		if (len(data.shape) > 1):
+# 			data = data[:,0]
 
-		X = stft(x)
-		#print(X.shape)
-		plot_transform(X)
+# 	# Get just the first 10 seconds as our audio signal
+# 		x = data[0:10*rate]
 
-	# Save the figure we just plotted as a .png
-		pylab.savefig('spectrogram' + str(i) + '.png')
+# 		X = stft(x)
+# 		#print(X.shape)
+# 		plot_transform(X)
 
-		s = setOfPeaksForTimeFrequencyData(X)
+# 	# Save the figure we just plotted as a .png
+# 		pylab.savefig('spectrogram' + str(i) + '.png')
 
-	# Plot some dummy peaks
-		#plot_peaks([(100, 50), (200, 87), (345, 20)],150,200)
-		#s = set()
-		#s.add((100, 50))
-		#s.add((200, 87))
-		#s.add((345, 20))
-		#print(s)
-		plot_peaks(s, startEndArray[i-1][0]/kWindowLength * kWindowLength/kWindowShift,startEndArray[i-1][1]/kWindowLength * kWindowLength/kWindowShift)
-		pylab.savefig('peaks' + str(i) + '.png')
+# 		s = setOfPeaksForTimeFrequencyData(X)
 
-	# Wait for the user to continue (exiting the script closes all figures)
-	input('Press [Enter] to finish')
+# 	# Plot some dummy peaks
+# 		#plot_peaks([(100, 50), (200, 87), (345, 20)],150,200)
+# 		#s = set()
+# 		#s.add((100, 50))
+# 		#s.add((200, 87))
+# 		#s.add((345, 20))
+# 		#print(s)
+# 		plot_peaks(s, startEndArray[i-1][0]/kWindowLength * kWindowLength/kWindowShift,startEndArray[i-1][1]/kWindowLength * kWindowLength/kWindowShift)
+# 		pylab.savefig('peaks' + str(i) + '.png')
+
+
+
+def short_time_haar(X):
+	print(len(X))
+	print(scipy.hamming(kWindowLength))
+
+rate, data = scipy.io.wavfile.read('Data/clips/' + '1' + '.wav')
+# Strip out the stereo channel if present
+if (len(data.shape) > 1):
+	data = data[:,0]
+
+# Get just the first 10 seconds as our audio signal
+x = data[0:10*rate]
+
+short_time_haar(x)
