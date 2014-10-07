@@ -296,15 +296,49 @@ startEndArray = [(72324, 138915), (101871, 156555), (105840, 167580), (19404, 10
 
 
 def short_time_haar(X):
-	print(len(X))
-	print(scipy.hamming(kWindowLength))
+	# x[0:4096], x[2048:2048+4096], x[4096:4096+4096],….
+# 	kWindowSize = 20
+# kWindowLength = 4096
+# kWindowShift = 2048
 
-rate, data = scipy.io.wavfile.read('Data/clips/' + '1' + '.wav')
-# Strip out the stereo channel if present
-if (len(data.shape) > 1):
-	data = data[:,0]
+	# print(len(X),X[0:5],haar(X[0:4096]))
+	numberOfWindows = int(np.floor(len(X) / kWindowShift)) -1
+	# numberOfWindows = 1
+	r = []
 
-# Get just the first 10 seconds as our audio signal
-x = data[0:10*rate]
+	for i in range(0,numberOfWindows):
+		r.append(haar(X[i*kWindowShift:(kWindowLength+(i*kWindowShift))]))
+	return np.array(scipy.absolute(r))
 
-short_time_haar(x)
+for i in range(1,5):
+	rate, data = scipy.io.wavfile.read('Data/clips/' + str(i) + '.wav')
+	# Strip out the stereo channel if present
+	if (len(data.shape) > 1):
+		data = data[:,0]
+
+	# Get just the first 10 seconds as our audio signal
+	x = data[0:10*rate]
+
+	X = stft(x)
+	print('stft',len(X), len(X[0]), X)
+
+	X = short_time_haar(x)
+	print('haar', len(X), len(X[0]), X)
+
+
+	c = 0
+	for k in X[0]:
+		if isinstance(k, complex):
+			print(c,k)
+		c = c + 1
+
+	# X = np.array([[1,2,-3,4],[5,6,7,8]])
+	# X = scipy.absolute(X)
+
+	# X = [X[0]]
+	# print('slice haar', len(X[0]), X)
+
+	plot_transform(X)
+
+	# Save the figure we just plotted as a .png
+	pylab.savefig('spectrogram_haar' + str(i) + '.png')
