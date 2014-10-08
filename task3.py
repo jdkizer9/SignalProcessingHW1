@@ -93,19 +93,11 @@ if __name__ == '__main__':
 		X = stft(x)
 		#print(X.shape)
 		plot_transform(X)
-
 	# Save the figure we just plotted as a .png
 		pylab.savefig('spectrogram' + str(i) + '.png')
-
+		
+	# Plot the peaks
 		s = setOfPeaksForTimeFrequencyData(X)
-
-	# Plot some dummy peaks
-		#plot_peaks([(100, 50), (200, 87), (345, 20)],150,200)
-		#s = set()
-		#s.add((100, 50))
-		#s.add((200, 87))
-		#s.add((345, 20))
-		#print(s)
 		plot_peaks(s, startEndArray[i-1][0]/kWindowLength * kWindowLength/kWindowShift,startEndArray[i-1][1]/kWindowLength * kWindowLength/kWindowShift)
 		pylab.savefig('peaks' + str(i) + '.png')
 
